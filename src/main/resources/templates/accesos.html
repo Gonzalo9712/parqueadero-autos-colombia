@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entradas y salidas - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+
+    <section class="cards">
+        <form class="card" th:action="@{/accesos/entrada}" method="post">
+            <h2>Registrar entrada</h2>
+            <label for="placaEntrada">Placa del vehículo</label>
+            <input id="placaEntrada" name="placa" maxlength="10" placeholder="ABC123" required autofocus>
+            <button type="submit">Registrar entrada</button>
+        </form>
+
+        <form class="card" th:action="@{/accesos/salida}" method="post">
+            <h2>Registrar salida</h2>
+            <label for="placaSalida">Placa del vehículo</label>
+            <input id="placaSalida" name="placa" maxlength="10" placeholder="ABC123" required>
+            <button type="submit" class="salida">Registrar salida</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Vehículos en el parqueadero (<span th:text="${#lists.size(vehiculos)}">0</span>)</h2>
+        <form th:action="@{/accesos}" method="get" class="filters">
+            <div>
+                <input name="buscar" th:value="${buscar}" placeholder="Buscar por placa">
+            </div>
+            <div>
+                <button type="submit" class="sec">Buscar</button>
+            </div>
+        </form>
+        <table>
+            <thead>
+            <tr><th>Placa</th><th>Tipo</th><th>Celda</th><th>Hora de ingreso</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${vehiculos}">
+                <td th:text="${r.vehiculo.placa}">ABC123</td>
+                <td th:text="${r.vehiculo.tipo.nombre}">CARRO</td>
+                <td th:text="${r.celda.codigo}">C01</td>
+                <td th:text="${#temporals.format(r.fechaHoraEntrada, 'dd/MM/yyyy HH:mm')}">fecha</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(vehiculos)}"><td colspan="4" class="small">No hay vehículos en el parqueadero.</td></tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Novedades - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+
+    <section class="card">
+        <h2>Registrar novedad</h2>
+        <p class="small">La novedad se asocia a la entrada activa del vehículo.</p>
+        <form th:action="@{/novedades}" th:object="${novedadForm}" method="post">
+            <label for="placa">Placa</label>
+            <input id="placa" th:field="*{placa}" maxlength="10" placeholder="ABC123">
+            <div class="field-error" th:if="${#fields.hasErrors('placa')}" th:errors="*{placa}"></div>
+
+            <label for="tipo">Tipo de novedad</label>
+            <select id="tipo" th:field="*{tipo}">
+                <option value="">-- Seleccione --</option>
+                <option value="DANO">Daño</option>
+                <option value="OBJETO_OLVIDADO">Objeto olvidado</option>
+                <option value="INCIDENTE">Incidente</option>
+            </select>
+            <div class="field-error" th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}"></div>
+
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" th:field="*{descripcion}" rows="3"></textarea>
+            <div class="field-error" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+
+            <button type="submit">Guardar novedad</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Últimas novedades</h2>
+        <table>
+            <thead><tr><th>Fecha</th><th>Placa</th><th>Tipo</th><th>Descripción</th><th>Registró</th></tr></thead>
+            <tbody>
+            <tr th:each="n : ${novedades}">
+                <td th:text="${#temporals.format(n.fechaHora, 'dd/MM/yyyy HH:mm')}">fecha</td>
+                <td th:text="${n.registro.vehiculo.placa}">ABC123</td>
+                <td th:text="${n.tipo}">DANO</td>
+                <td th:text="${n.descripcion}">desc</td>
+                <td th:text="${n.usuario.nombre}">operario</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(novedades)}"><td colspan="5" class="small">Aún no hay novedades registradas.</td></tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

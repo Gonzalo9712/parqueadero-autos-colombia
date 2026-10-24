@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Comprobante - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert error" th:if="${comprobante == null}">Comprobante no encontrado.</div>
+    <div class="card ticket" th:if="${comprobante != null}">
+        <h2>PARQUEADERO AUTOS COLOMBIA</h2>
+        <p class="big" th:text="'COMPROBANTE DE ' + ${comprobante.tipo}">COMPROBANTE</p>
+        <p>N.º <strong th:text="${#numbers.formatInteger(comprobante.consecutivo, 6)}">000001</strong></p>
+        <table>
+            <tr><td>Placa</td><td><strong th:text="${comprobante.registro.vehiculo.placa}">ABC123</strong></td></tr>
+            <tr><td>Tipo</td><td th:text="${comprobante.registro.vehiculo.tipo.nombre}">CARRO</td></tr>
+            <tr><td>Celda</td><td th:text="${comprobante.registro.celda.codigo}">C01</td></tr>
+            <tr><td>Entrada</td><td th:text="${#temporals.format(comprobante.registro.fechaHoraEntrada, 'dd/MM/yyyy HH:mm')}">fecha</td></tr>
+            <tr th:if="${comprobante.tipo == 'SALIDA'}">
+                <td>Salida</td><td th:text="${#temporals.format(comprobante.registro.fechaHoraSalida, 'dd/MM/yyyy HH:mm')}">fecha</td>
+            </tr>
+            <tr th:if="${comprobante.tipo == 'SALIDA'}">
+                <td>Permanencia</td><td th:text="${comprobante.registro.permanenciaTexto}">0 h 0 min</td>
+            </tr>
+            <tr><td>Atendió</td>
+                <td th:text="${comprobante.tipo == 'SALIDA' ? comprobante.registro.usuarioSalida.nombre : comprobante.registro.usuarioEntrada.nombre}">operario</td></tr>
+        </table>
+        <p class="small" th:text="'Emitido: ' + ${#temporals.format(comprobante.fechaHora, 'dd/MM/yyyy HH:mm:ss')}">emitido</p>
+        <div class="no-print">
+            <button type="button" onclick="window.print()">Imprimir</button>
+            <a th:href="@{/accesos}"><button type="button" class="sec">Volver</button></a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

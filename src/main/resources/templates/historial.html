@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historial - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <section class="card">
+        <h2>Historial de entradas y salidas</h2>
+        <form th:action="@{/historial}" method="get" class="filters">
+            <div><label>Placa</label><input name="placa" th:value="${placa}" placeholder="ABC123"></div>
+            <div><label>Desde</label><input type="date" name="desde" th:value="${desde}"></div>
+            <div><label>Hasta</label><input type="date" name="hasta" th:value="${hasta}"></div>
+            <div><button type="submit" class="sec">Consultar</button></div>
+        </form>
+        <table>
+            <thead>
+            <tr><th>Placa</th><th>Celda</th><th>Entrada</th><th>Salida</th><th>Permanencia</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${registros}">
+                <td th:text="${r.vehiculo.placa}">ABC123</td>
+                <td th:text="${r.celda.codigo}">C01</td>
+                <td th:text="${#temporals.format(r.fechaHoraEntrada, 'dd/MM/yyyy HH:mm')}">fecha</td>
+                <td th:text="${r.fechaHoraSalida != null ? #temporals.format(r.fechaHoraSalida, 'dd/MM/yyyy HH:mm') : 'En parqueadero'}">fecha</td>
+                <td th:text="${r.permanenciaTexto}">-</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(registros)}"><td colspan="5" class="small">Sin resultados.</td></tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

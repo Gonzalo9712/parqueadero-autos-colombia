@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<body>
+<nav th:fragment="nav">
+    <span class="brand">🚗 Autos Colombia</span>
+    <a th:href="@{/accesos}">Entradas y salidas</a>
+    <a th:href="@{/novedades}">Novedades</a>
+    <a th:href="@{/historial}" sec:authorize="hasRole('ADMINISTRADOR')">Historial</a>
+    <span class="spacer"></span>
+    <span><span sec:authentication="name"></span></span>
+    <form th:action="@{/logout}" method="post"><button type="submit">Salir</button></form>
+</nav>
+</body>
+</html>
