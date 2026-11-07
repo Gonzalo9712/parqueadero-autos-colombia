@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Editar celda - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <a class="back" th:href="@{/celdas}">← Volver a celdas</a>
+    <section class="card">
+        <h2>Editar celda</h2>
+        <div class="alert error" th:if="${celdaForm.estado == 'OCUPADA'}">
+            Esta celda está ocupada por un vehículo. Solo se puede modificar cuando esté disponible.
+        </div>
+        <form th:unless="${celdaForm.estado == 'OCUPADA'}" th:action="@{/celdas/{id}(id=${celdaForm.id})}" th:object="${celdaForm}" method="post">
+            <div class="grid2">
+                <div>
+                    <label for="codigo">Código</label>
+                    <input id="codigo" th:field="*{codigo}" maxlength="10">
+                    <div class="field-error" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></div>
+                </div>
+                <div>
+                    <label for="idTipo">Tipo de vehículo</label>
+                    <select id="idTipo" th:field="*{idTipo}">
+                        <option th:each="t : ${tipos}" th:value="${t.idTipo}" th:text="${t.nombre}">CARRO</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="estado">Estado</label>
+                    <select id="estado" th:field="*{estado}">
+                        <option value="DISPONIBLE">DISPONIBLE</option>
+                        <option value="INACTIVA">INACTIVA (fuera de servicio)</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Guardar cambios</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

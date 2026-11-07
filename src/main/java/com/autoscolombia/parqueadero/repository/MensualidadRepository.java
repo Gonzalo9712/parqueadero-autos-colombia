@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface MensualidadRepository extends JpaRepository<Mensualidad, Integer> {
     List<Mensualidad> findByCliente_IdCliente(Integer idCliente);
+    List<Mensualidad> findByCliente_IdClienteOrderByFechaFinDesc(Integer idCliente);
 }

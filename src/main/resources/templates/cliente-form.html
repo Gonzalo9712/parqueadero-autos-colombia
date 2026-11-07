@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cliente - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <a class="back" th:href="${clienteForm.id == null} ? @{/clientes} : @{/clientes/{id}(id=${clienteForm.id})}">← Volver</a>
+    <section class="card">
+        <h2 th:text="${clienteForm.id == null} ? 'Nuevo cliente' : 'Editar cliente'">Cliente</h2>
+        <form th:action="${clienteForm.id == null} ? @{/clientes} : @{/clientes/{id}(id=${clienteForm.id})}"
+              th:object="${clienteForm}" method="post">
+            <div class="grid2">
+                <div>
+                    <label for="tipoDocumento">Tipo de documento</label>
+                    <select id="tipoDocumento" th:field="*{tipoDocumento}">
+                        <option value="CC">CC - Cédula de ciudadanía</option>
+                        <option value="CE">CE - Cédula de extranjería</option>
+                        <option value="NIT">NIT</option>
+                        <option value="PA">PA - Pasaporte</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="documento">Documento</label>
+                    <input id="documento" th:field="*{documento}" maxlength="20">
+                    <div class="field-error" th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}"></div>
+                </div>
+                <div>
+                    <label for="nombres">Nombres</label>
+                    <input id="nombres" th:field="*{nombres}" maxlength="80">
+                    <div class="field-error" th:if="${#fields.hasErrors('nombres')}" th:errors="*{nombres}"></div>
+                </div>
+                <div>
+                    <label for="apellidos">Apellidos</label>
+                    <input id="apellidos" th:field="*{apellidos}" maxlength="80">
+                    <div class="field-error" th:if="${#fields.hasErrors('apellidos')}" th:errors="*{apellidos}"></div>
+                </div>
+                <div>
+                    <label for="telefono">Teléfono (opcional)</label>
+                    <input id="telefono" th:field="*{telefono}" maxlength="20">
+                </div>
+                <div>
+                    <label for="email">Correo (opcional)</label>
+                    <input id="email" th:field="*{email}" maxlength="100">
+                    <div class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+            </div>
+            <button type="submit">Guardar</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

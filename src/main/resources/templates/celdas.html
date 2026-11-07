@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Celdas - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <section class="stats">
+        <div class="stat"><strong th:text="${total}">0</strong><span>Total de celdas</span></div>
+        <div class="stat"><strong th:text="${disponibles}">0</strong><span>Disponibles</span></div>
+        <div class="stat"><strong th:text="${ocupadas}">0</strong><span>Ocupadas</span></div>
+        <div class="stat"><strong th:text="${inactivas}">0</strong><span>Inactivas</span></div>
+    </section>
+
+    <section class="card">
+        <h2>Nueva celda</h2>
+        <form th:action="@{/celdas}" th:object="${celdaForm}" method="post">
+            <div class="grid2">
+                <div>
+                    <label for="codigo">Código (ej. C11, M06)</label>
+                    <input id="codigo" th:field="*{codigo}" maxlength="10">
+                    <div class="field-error" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></div>
+                </div>
+                <div>
+                    <label for="idTipo">Tipo de vehículo</label>
+                    <select id="idTipo" th:field="*{idTipo}">
+                        <option value="">-- Seleccione --</option>
+                        <option th:each="t : ${tipos}" th:value="${t.idTipo}" th:text="${t.nombre}">CARRO</option>
+                    </select>
+                    <div class="field-error" th:if="${#fields.hasErrors('idTipo')}" th:errors="*{idTipo}"></div>
+                </div>
+            </div>
+            <button type="submit">Crear celda</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Celdas del parqueadero</h2>
+        <table>
+            <thead><tr><th>Código</th><th>Tipo</th><th>Estado</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="c : ${celdas}">
+                <td th:text="${c.codigo}">C01</td>
+                <td th:text="${c.tipo.nombre}">CARRO</td>
+                <td><span th:class="${c.estado == 'DISPONIBLE'} ? 'badge ok-b' : (${c.estado == 'OCUPADA'} ? 'badge busy-b' : 'badge off-b')" th:text="${c.estado}">DISPONIBLE</span></td>
+                <td class="actions"><a class="mini" th:href="@{/celdas/{id}/editar(id=${c.idCelda})}">Editar</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

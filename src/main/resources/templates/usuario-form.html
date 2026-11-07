@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuario - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <a class="back" th:href="@{/usuarios}">← Volver a usuarios</a>
+    <section class="card">
+        <h2 th:text="${usuarioForm.id == null} ? 'Nuevo usuario' : 'Editar usuario'">Usuario</h2>
+        <form th:action="${usuarioForm.id == null} ? @{/usuarios} : @{/usuarios/{id}(id=${usuarioForm.id})}"
+              th:object="${usuarioForm}" method="post">
+            <div class="grid2">
+                <div>
+                    <label for="nombre">Nombre completo</label>
+                    <input id="nombre" th:field="*{nombre}" maxlength="100">
+                    <div class="field-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+                </div>
+                <div>
+                    <label for="username">Usuario (para iniciar sesión)</label>
+                    <input id="username" th:field="*{username}" maxlength="50" th:readonly="${usuarioForm.id != null}">
+                    <div class="field-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                </div>
+                <div>
+                    <label for="password" th:text="${usuarioForm.id == null} ? 'Contraseña' : 'Nueva contraseña (dejar vacío para no cambiarla)'">Contraseña</label>
+                    <input id="password" type="password" th:field="*{password}" autocomplete="new-password">
+                </div>
+                <div>
+                    <label for="idRol">Rol</label>
+                    <select id="idRol" th:field="*{idRol}">
+                        <option value="">-- Seleccione --</option>
+                        <option th:each="r : ${roles}" th:value="${r.idRol}" th:text="${r.nombre}">ROL</option>
+                    </select>
+                    <div class="field-error" th:if="${#fields.hasErrors('idRol')}" th:errors="*{idRol}"></div>
+                </div>
+            </div>
+            <div class="check">
+                <input id="activo" type="checkbox" th:field="*{activo}">
+                <label for="activo">Usuario activo</label>
+            </div>
+            <button type="submit">Guardar</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

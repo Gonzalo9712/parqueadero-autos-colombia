@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clientes - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <section class="card">
+        <div class="head">
+            <h2>Clientes</h2>
+            <a class="btn" th:href="@{/clientes/nuevo}">+ Nuevo cliente</a>
+        </div>
+        <form th:action="@{/clientes}" method="get" class="filters">
+            <div><input name="buscar" th:value="${buscar}" placeholder="Buscar por documento, nombre o apellido"></div>
+            <div><button type="submit" class="sec">Buscar</button></div>
+        </form>
+        <table>
+            <thead><tr><th>Documento</th><th>Nombre</th><th>Teléfono</th><th>Correo</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="c : ${clientes}">
+                <td th:text="${c.tipoDocumento + ' ' + c.documento}">CC 100</td>
+                <td th:text="${c.nombres + ' ' + c.apellidos}">Nombre</td>
+                <td th:text="${c.telefono}">-</td>
+                <td th:text="${c.email}">-</td>
+                <td class="actions"><a class="mini" th:href="@{/clientes/{id}(id=${c.idCliente})}">Ver detalle</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(clientes)}"><td colspan="5" class="small">No hay clientes para mostrar.</td></tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

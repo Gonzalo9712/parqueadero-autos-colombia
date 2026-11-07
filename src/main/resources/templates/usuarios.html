@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuarios - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <section class="card">
+        <div class="head">
+            <h2>Usuarios del sistema</h2>
+            <a class="btn" th:href="@{/usuarios/nuevo}">+ Nuevo usuario</a>
+        </div>
+        <table>
+            <thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+            <tr th:each="u : ${usuarios}">
+                <td th:text="${u.nombre}">Nombre</td>
+                <td th:text="${u.username}">usuario</td>
+                <td th:text="${u.rol.nombre}">OPERARIO</td>
+                <td><span th:class="${u.activo} ? 'badge ok-b' : 'badge off-b'" th:text="${u.activo} ? 'Activo' : 'Inactivo'">Activo</span></td>
+                <td class="actions">
+                    <a class="mini" th:href="@{/usuarios/{id}/editar(id=${u.idUsuarioSistema})}">Editar</a>
+                    <form th:unless="${u.username == usuarioActual}" th:action="@{/usuarios/{id}/estado(id=${u.idUsuarioSistema})}" method="post">
+                        <button type="submit" class="mini warn" th:text="${u.activo} ? 'Desactivar' : 'Activar'">Desactivar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

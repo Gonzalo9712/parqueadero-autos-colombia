@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalle del cliente - Autos Colombia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div class="alert ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <a class="back" th:href="@{/clientes}">← Volver a clientes</a>
+
+    <section class="card">
+        <div class="head">
+            <h2 th:text="${cliente.nombres + ' ' + cliente.apellidos}">Cliente</h2>
+            <a class="mini" th:href="@{/clientes/{id}/editar(id=${cliente.idCliente})}">Editar datos</a>
+        </div>
+        <p class="small" th:text="${cliente.tipoDocumento + ' ' + cliente.documento + '  ·  Tel: ' + (cliente.telefono ?: '-') + '  ·  ' + (cliente.email ?: 'sin correo')}">datos</p>
+    </section>
+
+    <section class="card">
+        <h2>Vehículos</h2>
+        <table>
+            <thead><tr><th>Placa</th><th>Tipo</th><th>Marca</th><th>Color</th></tr></thead>
+            <tbody>
+            <tr th:each="v : ${vehiculos}">
+                <td th:text="${v.placa}">ABC123</td>
+                <td th:text="${v.tipo.nombre}">CARRO</td>
+                <td th:text="${v.marca}">-</td>
+                <td th:text="${v.color}">-</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(vehiculos)}"><td colspan="4" class="small">El cliente aún no tiene vehículos.</td></tr>
+            </tbody>
+        </table>
+        <h3>Agregar vehículo</h3>
+        <form th:action="@{/clientes/{id}/vehiculos(id=${cliente.idCliente})}" method="post">
+            <div class="grid2">
+                <div><label for="placa">Placa</label><input id="placa" name="placa" maxlength="10" required></div>
+                <div>
+                    <label for="idTipo">Tipo</label>
+                    <select id="idTipo" name="idTipo" required>
+                        <option value="">-- Seleccione --</option>
+                        <option th:each="t : ${tipos}" th:value="${t.idTipo}" th:text="${t.nombre}">CARRO</option>
+                    </select>
+                </div>
+                <div><label for="marca">Marca (opcional)</label><input id="marca" name="marca" maxlength="50"></div>
+                <div><label for="color">Color (opcional)</label><input id="color" name="color" maxlength="30"></div>
+            </div>
+            <button type="submit">Agregar vehículo</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Mensualidades</h2>
+        <table>
+            <thead><tr><th>Inicio</th><th>Fin</th><th>Estado</th></tr></thead>
+            <tbody>
+            <tr th:each="m : ${mensualidades}">
+                <td th:text="${#temporals.format(m.fechaInicio, 'dd/MM/yyyy')}">inicio</td>
+                <td th:text="${#temporals.format(m.fechaFin, 'dd/MM/yyyy')}">fin</td>
+                <td><span th:class="${m.estaVigente()} ? 'badge ok-b' : 'badge off-b'" th:text="${m.estaVigente()} ? 'Vigente' : 'No vigente'">Vigente</span></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(mensualidades)}"><td colspan="3" class="small">El cliente aún no tiene mensualidades.</td></tr>
+            </tbody>
+        </table>
+        <h3>Registrar mensualidad</h3>
+        <form th:action="@{/clientes/{id}/mensualidades(id=${cliente.idCliente})}" th:object="${mensualidadForm}" method="post">
+            <div class="grid2">
+                <div><label for="fechaInicio">Fecha de inicio</label><input id="fechaInicio" type="date" th:field="*{fechaInicio}" required></div>
+                <div><label for="fechaFin">Fecha de fin</label><input id="fechaFin" type="date" th:field="*{fechaFin}" required></div>
+            </div>
+            <button type="submit">Registrar mensualidad</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

@@ -6,6 +6,9 @@
     <a th:href="@{/accesos}">Entradas y salidas</a>
     <a th:href="@{/novedades}">Novedades</a>
     <a th:href="@{/historial}" sec:authorize="hasRole('ADMINISTRADOR')">Historial</a>
+    <a th:href="@{/clientes}" sec:authorize="hasRole('ADMINISTRADOR')">Clientes</a>
+    <a th:href="@{/celdas}" sec:authorize="hasRole('ADMINISTRADOR')">Celdas</a>
+    <a th:href="@{/usuarios}" sec:authorize="hasRole('ADMINISTRADOR')">Usuarios</a>
     <span class="spacer"></span>
     <span><span sec:authentication="name"></span></span>
     <form th:action="@{/logout}" method="post"><button type="submit">Salir</button></form>
